@@ -1,16 +1,16 @@
 
     function weather_report(){
-        let key1 = '2e6397ec3e2f8ec09062bfb386aa6e59';
+        let key1 = 'pk.eyJ1IjoiYW5zaHVsMjc1IiwiYSI6ImNrY2Fwc2lzOTF0eDQyeHFzOTAwcG0xM2MifQ.NOyNhrHIOweBfG7TWnqOpg';
         let loc = document.getElementById('weather_location').value;
-        fetch('http://api.positionstack.com/v1/forward?access_key='+key1+'&query='+loc)
+        fetch('https://api.mapbox.com/geocoding/v5/mapbox.places/'+loc+'.json?access_token='+key1)
         .then(function(resp1) { return resp1.json() }) // Convert data to json
         .then(function(data1) {
-            let location = data1['data'][0];
+            let location = data1['features'][0];
             let key2 = '21768454932c4ed0f606fcf15bc86604';
-            fetch('https://api.openweathermap.org/data/2.5/onecall?lat='+location["latitude"]+'&lon='+location["longitude"]+'&units=metric&appid='+key2)
+            fetch('https://api.openweathermap.org/data/2.5/onecall?lat='+location["center"][1]+'&lon='+location["center"][0]+'&units=metric&appid='+key2)
             .then(function(resp3) { return resp3.json() }) // Convert data to json
             .then(function(data3) {
-                fetch('https://api.openweathermap.org/data/2.5/forecast?lat='+location["latitude"]+'&lon='+location["longitude"]+'&units=metric&appid='+key2)
+                fetch('https://api.openweathermap.org/data/2.5/forecast?lat='+location["center"][1]+'&lon='+location["center"][0]+'&units=metric&appid='+key2)
                 .then(function(resp2) { return resp2.json() }) // Convert data to json
                 .then(function(data2) {
                   alert(
@@ -26,10 +26,10 @@
                 });
 
                 //Location
-                document.getElementById('weather_location').value = location['name']+", "+location['region']+", "+location['country'];
+                document.getElementById('weather_location').value = location['place_name'];
                 document.getElementById('location').innerHTML = "<center>LOCATION :</center>";
-                let longitude = parseFloat(location["longitude"]);
-	              let latitude = parseFloat(location["latitude"]); 	
+                let longitude = parseFloat(location["center"][0]);
+	              let latitude = parseFloat(location["center"][1]); 	
       	        document.getElementById('longitude').innerHTML = "<center>The Longitude of the location : &nbsp&nbsp"+longitude+"°E</center>";
 	              document.getElementById('latitude').innerHTML = "<center>The Latitude of the location : &nbsp&nbsp&nbsp&nbsp&nbsp"+latitude+"°N</center>";
                 
@@ -151,7 +151,7 @@
                 
                 //day1 -- Day Before Yesterday
                 let date_bfr_ystd = curdate - (2*60*60*24);
-                fetch('https://api.openweathermap.org/data/2.5/onecall/timemachine?lat='+location["latitude"]+'&lon='+location["longitude"]+'&dt='+date_bfr_ystd+'&units=metric&appid='+key2)
+                fetch('https://api.openweathermap.org/data/2.5/onecall/timemachine?lat='+location["center"][1]+'&lon='+location["center"][0]+'&dt='+date_bfr_ystd+'&units=metric&appid='+key2)
                 .then(function(resp4) { return resp4.json() }) // Convert data to json
                 .then(function(data4) {
                   let response2 = data4;
@@ -195,7 +195,7 @@
                 
                 //day2 -- Yesterday
                 let date_ystd = curdate - (60*60*24);
-                fetch('https://api.openweathermap.org/data/2.5/onecall/timemachine?lat='+location["latitude"]+'&lon='+location["longitude"]+'&dt='+date_ystd+'&units=metric&appid='+key2)
+                fetch('https://api.openweathermap.org/data/2.5/onecall/timemachine?lat='+location["center"][1]+'&lon='+location["center"][0]+'&dt='+date_ystd+'&units=metric&appid='+key2)
                 .then(function(resp5) { return resp5.json() }) // Convert data to json
                 .then(function(data5) {
                   let response3 = data5;
